@@ -1,8 +1,7 @@
-'use client';
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { testOptions, ItemType } from '@/lib/test-data';
 import { getResultData, typeNames, conclusionText } from '@/lib/result-data';
+import CopyButton from './CopyButton';
 
 interface ResultPageProps {
   params: Promise<{ id: string }>;
@@ -10,8 +9,8 @@ interface ResultPageProps {
 
 // 为静态导出生成所有可能的路径
 export async function generateStaticParams() {
-  const params = [];
   const types: ItemType[] = ['doll', 'jewelry', 'book', 'phone', 'lion'];
+  const params = [];
   
   // 生成所有可能的组合 (5 x 5 = 25 种)
   for (const selfType of types) {
@@ -25,25 +24,8 @@ export async function generateStaticParams() {
   return params;
 }
 
-export default function ResultPage({ params }: ResultPageProps) {
-  const [id, setId] = useState<string>('');
-  const [copySuccess, setCopySuccess] = useState(false);
-
-  useEffect(() => {
-    params.then(p => setId(p.id));
-  }, [params]);
-
-  if (!id) {
-    return (
-      <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-50 via-blue-50 to-purple-50">
-        <div className="text-center">
-          <div className="text-4xl mb-4 animate-pulse">💫</div>
-          <p className="text-zinc-600">加载中...</p>
-        </div>
-      </main>
-    );
-  }
-
+export default async function ResultPage({ params }: ResultPageProps) {
+  const { id } = await params;
   const [selfTypeStr, wealthTypeStr] = id.split('-') as [ItemType, ItemType];
 
   const selfItem = testOptions.find(item => item.id === selfTypeStr);
@@ -65,16 +47,10 @@ export default function ResultPage({ params }: ResultPageProps) {
     );
   }
 
-  const handleCopyResult = () => {
-    const shareText = `我的财富心理测试结果：${selfItem.emoji} ${typeNames[selfTypeStr]}（自己）× ${wealthItem.emoji} ${typeNames[wealthTypeStr]}（财富）
+  const shareText = `我的财富心理测试结果：${selfItem.emoji} ${typeNames[selfTypeStr]}（自己）× ${wealthItem.emoji} ${typeNames[wealthTypeStr]}（财富）
 
-通过心理测试，了解真实的自己，找到财富突破口。立即测试：${window.location.origin}`;
-    
-    navigator.clipboard.writeText(shareText).then(() => {
-      setCopySuccess(true);
-      setTimeout(() => setCopySuccess(false), 2000);
-    });
-  };
+通过心理测试，了解真实的自己，找到财富突破口。`;
+
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-violet-50 via-blue-50 to-purple-50 py-8 sm:py-12">
@@ -214,12 +190,7 @@ export default function ResultPage({ params }: ResultPageProps) {
 
         {/* 底部行动区 */}
         <div className="mt-8 sm:mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <button
-            onClick={handleCopyResult}
-            className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold text-violet-700 bg-white hover:bg-violet-50 active:bg-violet-100 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 sm:hover:scale-105 border-2 border-violet-200"
-          >
-            {copySuccess ? '✓ 已复制' : '📱 分享结果'}
-          </button>
+          <CopyButton shareText={shareText} />
           <Link
             href="/test"
             className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold text-white bg-violet-600 hover:bg-violet-700 active:bg-violet-800 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 sm:hover:scale-105 text-center"
