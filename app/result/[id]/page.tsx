@@ -8,6 +8,23 @@ interface ResultPageProps {
   params: Promise<{ id: string }>;
 }
 
+// 为静态导出生成所有可能的路径
+export async function generateStaticParams() {
+  const params = [];
+  const types: ItemType[] = ['doll', 'jewelry', 'book', 'phone', 'lion'];
+  
+  // 生成所有可能的组合 (5 x 5 = 25 种)
+  for (const selfType of types) {
+    for (const wealthType of types) {
+      params.push({
+        id: `${selfType}-${wealthType}`
+      });
+    }
+  }
+  
+  return params;
+}
+
 export default function ResultPage({ params }: ResultPageProps) {
   const [id, setId] = useState<string>('');
   const [copySuccess, setCopySuccess] = useState(false);
