@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { testOptions, ItemType } from '@/lib/test-data';
 import { getResultData, typeNames, conclusionText } from '@/lib/result-data';
-import CopyButton from './CopyButton';
+import ExportableContainer from './ExportableContainer';
 
 interface ResultPageProps {
   params: Promise<{ id: string }>;
@@ -30,8 +30,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
 
   const selfItem = testOptions.find(item => item.id === selfTypeStr);
   const wealthItem = testOptions.find(item => item.id === wealthTypeStr);
-  const resultData = getResultData(selfTypeStr, wealthTypeStr);
-
+  
   if (!selfItem || !wealthItem) {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-violet-50 via-blue-50 to-purple-50 p-4 text-center">
@@ -47,166 +46,204 @@ export default async function ResultPage({ params }: ResultPageProps) {
     );
   }
 
-  const shareText = `我的财富心理测试结果：${selfItem.emoji} ${typeNames[selfTypeStr]}（自己）× ${wealthItem.emoji} ${typeNames[wealthTypeStr]}（财富）
-
-通过心理测试，了解真实的自己，找到财富突破口。`;
-
+  const resultData = getResultData(selfTypeStr, wealthTypeStr);
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-violet-50 via-blue-50 to-purple-50 py-8 sm:py-12">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6">
+    <main className="min-h-screen bg-gradient-to-br from-violet-50 via-blue-50 to-purple-50 py-6 sm:py-10 lg:py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Hero 区：类型标题 */}
-        <div className="text-center mb-8 sm:mb-12">
-          <div className="inline-block bg-white rounded-2xl px-6 sm:px-10 py-8 sm:py-10 shadow-xl">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-zinc-900 mb-4">
+        {/* 顶部标题卡片 */}
+        <div className="mb-8 sm:mb-10">
+          <div className="bg-white rounded-2xl sm:rounded-3xl px-6 sm:px-8 lg:px-10 py-8 sm:py-10 shadow-lg border border-violet-100">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-zinc-900 mb-6 text-center">
               你的财富心理报告
             </h1>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 text-xl sm:text-2xl">
-              <div className="flex items-center gap-2">
-                <span className="text-4xl sm:text-5xl">{selfItem.emoji}</span>
-                <span className="font-semibold text-violet-700">{typeNames[selfTypeStr]}</span>
-                <span className="text-sm sm:text-base text-zinc-500">（自己）</span>
-              </div>
-              <span className="text-zinc-400 hidden sm:inline">×</span>
-              <div className="flex items-center gap-2">
-                <span className="text-4xl sm:text-5xl">{wealthItem.emoji}</span>
-                <span className="font-semibold text-violet-700">{typeNames[wealthTypeStr]}</span>
-                <span className="text-sm sm:text-base text-zinc-500">（财富）</span>
+            
+            {/* 类型展示 */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+              <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+                <div className="flex items-center gap-3 bg-gradient-to-br from-violet-50 to-purple-50 rounded-xl px-5 py-3 border border-violet-200">
+                  <span className="text-4xl sm:text-5xl">{selfItem.emoji}</span>
+                  <div className="flex flex-col">
+                    <span className="text-lg sm:text-xl font-bold text-violet-700">{typeNames[selfTypeStr]}</span>
+                    <span className="text-xs sm:text-sm text-zinc-500">自己</span>
+                  </div>
+                </div>
+                
+                <span className="text-2xl sm:text-3xl text-violet-300 font-light">×</span>
+                
+                <div className="flex items-center gap-3 bg-gradient-to-br from-violet-50 to-purple-50 rounded-xl px-5 py-3 border border-violet-200">
+                  <span className="text-4xl sm:text-5xl">{wealthItem.emoji}</span>
+                  <div className="flex flex-col">
+                    <span className="text-lg sm:text-xl font-bold text-violet-700">{typeNames[wealthTypeStr]}</span>
+                    <span className="text-xs sm:text-sm text-zinc-500">财富</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* 主内容卡片 */}
-        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-          
-          {/* 第一部分：关于你自己 */}
-          <section className="p-6 sm:p-10 bg-gradient-to-br from-green-50/50 to-emerald-50/30">
-            <div className="flex items-center gap-3 mb-6">
-              <span className="text-3xl sm:text-4xl">{selfItem.emoji}</span>
-              <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900">
-                关于你自己
-              </h2>
-            </div>
-
-            {/* 财富潜力 */}
-            <div className="mb-8">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-2xl">✨</span>
-                <h3 className="text-xl sm:text-2xl font-semibold text-emerald-700">财富潜力</h3>
+        {/* 主内容区域 */}
+        <ExportableContainer fileName={`result-${id}`} buttonText="导出整页图片">
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden border border-zinc-100">
+            
+            {/* 第一部分：财富潜力 - 浅蓝色主题 */}
+            <section className="p-6 sm:p-8 lg:p-10 border-b border-zinc-100 bg-gradient-to-br from-blue-50/30 to-sky-50/20">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-100 to-sky-100 flex items-center justify-center border border-blue-200 shadow-sm">
+                  <span className="text-2xl">✨</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900">你的财富潜力</h2>
               </div>
-              <p className="text-base sm:text-lg text-zinc-800 leading-relaxed pl-8">
-                {resultData.selfAnalysis.potential}
-              </p>
-            </div>
 
-            {/* 财富卡点 */}
-            <div className="mb-8">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-2xl">💡</span>
-                <h3 className="text-xl sm:text-2xl font-semibold text-amber-700">财富卡点</h3>
+              <div className="space-y-8">
+                {/* 自己部分 */}
+                <div className="bg-white/70 rounded-xl p-5 sm:p-6 border-2 border-blue-200 shadow-sm">
+                  <h3 className="text-lg sm:text-xl font-bold text-blue-700 mb-2 flex items-center gap-2">
+                    <span>自己 → {typeNames[selfTypeStr]}</span>
+                    <span className="text-2xl">{selfItem.emoji}</span>
+                  </h3>
+                  <p className="text-sm text-zinc-500 mb-3 italic">
+                    选择「{typeNames[selfTypeStr]}」代表自己，说明：
+                  </p>
+                  <p className="text-base sm:text-lg text-zinc-800 leading-relaxed">
+                    {resultData.selfAnalysis.potential}
+                  </p>
+                </div>
+
+                {/* 财富部分 */}
+                <div className="bg-white/70 rounded-xl p-5 sm:p-6 border-2 border-blue-200 shadow-sm">
+                  <h3 className="text-lg sm:text-xl font-bold text-blue-700 mb-2 flex items-center gap-2">
+                    <span>财富 → {typeNames[wealthTypeStr]}</span>
+                    <span className="text-2xl">{wealthItem.emoji}</span>
+                  </h3>
+                  <p className="text-sm text-zinc-500 mb-3 italic">
+                    选择「{typeNames[wealthTypeStr]}」代表财富，说明你：
+                  </p>
+                  <p className="text-base sm:text-lg text-zinc-800 leading-relaxed">
+                    {resultData.wealthAnalysis.potential}
+                  </p>
+                </div>
               </div>
-              <p className="text-base sm:text-lg text-zinc-800 leading-relaxed pl-8">
-                {resultData.selfAnalysis.blockage}
-              </p>
-            </div>
+            </section>
 
-            {/* 提升方向 */}
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-2xl">🚀</span>
-                <h3 className="text-xl sm:text-2xl font-semibold text-blue-700">提升方向</h3>
+            {/* 第二部分：财富卡点 - 琥珀色主题 */}
+            <section className="p-6 sm:p-8 lg:p-10 border-b border-zinc-100 bg-gradient-to-br from-amber-50/30 to-orange-50/20">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center border border-amber-200 shadow-sm">
+                  <span className="text-2xl">💡</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900">你的财富卡点</h2>
               </div>
-              <p className="text-base sm:text-lg text-zinc-800 leading-relaxed pl-8 font-medium">
-                {resultData.selfAnalysis.improvement}
-              </p>
-            </div>
-          </section>
 
-          {/* 分隔线 */}
-          <div className="h-px bg-gradient-to-r from-transparent via-zinc-200 to-transparent"></div>
+              <div className="space-y-8">
+                {/* 自己部分 */}
+                <div className="bg-white/70 rounded-xl p-5 sm:p-6 border-2 border-amber-200 shadow-sm">
+                  <h3 className="text-lg sm:text-xl font-bold text-amber-700 mb-2 flex items-center gap-2">
+                    <span>自己 → {typeNames[selfTypeStr]}</span>
+                    <span className="text-2xl">{selfItem.emoji}</span>
+                  </h3>
+                  <p className="text-sm text-zinc-500 mb-3 italic">
+                    选择「{typeNames[selfTypeStr]}」代表自己，说明有一些：
+                  </p>
+                  <p className="text-base sm:text-lg text-zinc-800 leading-relaxed">
+                    {resultData.selfAnalysis.blockage}
+                  </p>
+                </div>
 
-          {/* 第二部分：关于财富观 */}
-          <section className="p-6 sm:p-10 bg-gradient-to-br from-blue-50/50 to-cyan-50/30">
-            <div className="flex items-center gap-3 mb-6">
-              <span className="text-3xl sm:text-4xl">{wealthItem.emoji}</span>
-              <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900">
-                关于财富观
-              </h2>
-            </div>
-
-            {/* 财富潜力 */}
-            <div className="mb-8">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-2xl">✨</span>
-                <h3 className="text-xl sm:text-2xl font-semibold text-emerald-700">财富潜力</h3>
+                {/* 财富部分 */}
+                <div className="bg-white/70 rounded-xl p-5 sm:p-6 border-2 border-amber-200 shadow-sm">
+                  <h3 className="text-lg sm:text-xl font-bold text-amber-700 mb-2 flex items-center gap-2">
+                    <span>财富 → {typeNames[wealthTypeStr]}</span>
+                    <span className="text-2xl">{wealthItem.emoji}</span>
+                  </h3>
+                  <p className="text-sm text-zinc-500 mb-3 italic">
+                    选择「{typeNames[wealthTypeStr]}」代表财富，说明：
+                  </p>
+                  <p className="text-base sm:text-lg text-zinc-800 leading-relaxed">
+                    {resultData.wealthAnalysis.blockage}
+                  </p>
+                </div>
               </div>
-              <p className="text-base sm:text-lg text-zinc-800 leading-relaxed pl-8">
-                {resultData.wealthAnalysis.potential}
-              </p>
-            </div>
+            </section>
 
-            {/* 财富卡点 */}
-            <div className="mb-8">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-2xl">💡</span>
-                <h3 className="text-xl sm:text-2xl font-semibold text-amber-700">财富卡点</h3>
+            {/* 第三部分：提升方向 - 绿色/青色主题 */}
+            <section className="p-6 sm:p-8 lg:p-10 border-b border-zinc-100 bg-gradient-to-br from-emerald-50/30 to-teal-50/20">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-100 to-teal-100 flex items-center justify-center border border-emerald-200 shadow-sm">
+                  <span className="text-2xl">🚀</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900">提升方向</h2>
               </div>
-              <p className="text-base sm:text-lg text-zinc-800 leading-relaxed pl-8">
-                {resultData.wealthAnalysis.blockage}
-              </p>
-            </div>
 
-            {/* 提升方向 */}
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-2xl">🚀</span>
-                <h3 className="text-xl sm:text-2xl font-semibold text-blue-700">提升方向</h3>
+              <div className="space-y-8">
+                {/* 自己部分 */}
+                <div className="bg-white/70 rounded-xl p-5 sm:p-6 border-2 border-emerald-200 shadow-sm">
+                  <h3 className="text-lg sm:text-xl font-bold text-emerald-700 mb-2 flex items-center gap-2">
+                    <span>自己 → {typeNames[selfTypeStr]}</span>
+                    <span className="text-2xl">{selfItem.emoji}</span>
+                  </h3>
+                  <p className="text-sm text-zinc-500 mb-3 italic">
+                    选择「{typeNames[selfTypeStr]}」代表自己，说明有一些：
+                  </p>
+                  <p className="text-base sm:text-lg text-zinc-800 leading-relaxed">
+                    {resultData.selfAnalysis.improvement}
+                  </p>
+                </div>
+
+                {/* 财富部分 */}
+                <div className="bg-white/70 rounded-xl p-5 sm:p-6 border-2 border-emerald-200 shadow-sm">
+                  <h3 className="text-lg sm:text-xl font-bold text-emerald-700 mb-2 flex items-center gap-2">
+                    <span>财富 → {typeNames[wealthTypeStr]}</span>
+                    <span className="text-2xl">{wealthItem.emoji}</span>
+                  </h3>
+                  <p className="text-sm text-zinc-500 mb-3 italic">
+                    选择「{typeNames[wealthTypeStr]}」代表财富，说明：
+                  </p>
+                  <p className="text-base sm:text-lg text-zinc-800 leading-relaxed">
+                    {resultData.wealthAnalysis.improvement}
+                  </p>
+                </div>
               </div>
-              <p className="text-base sm:text-lg text-zinc-800 leading-relaxed pl-8 font-medium">
-                {resultData.wealthAnalysis.improvement}
-              </p>
-            </div>
-          </section>
+            </section>
 
-          {/* 分隔线 */}
-          <div className="h-px bg-gradient-to-r from-transparent via-zinc-200 to-transparent"></div>
+            {/* 第四部分：结语 */}
+            <section className="p-6 sm:p-8 lg:p-10 bg-gradient-to-br from-violet-50/30 to-purple-50/20">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-100 to-purple-100 flex items-center justify-center border border-violet-200 shadow-sm">
+                  <span className="text-2xl">💎</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-violet-800">写在最后</h2>
+              </div>
+              <div className="bg-white/70 rounded-xl p-5 sm:p-6 border-2 border-violet-200 shadow-sm">
+                <p className="text-base sm:text-lg text-zinc-800 leading-relaxed whitespace-pre-line">
+                  {conclusionText}
+                </p>
+              </div>
+            </section>
 
-          {/* 第三部分：激励结语 */}
-          <section className="p-6 sm:p-10 bg-gradient-to-br from-violet-50/50 to-purple-50/30">
-            <div className="flex items-center gap-2 mb-6">
-              <span className="text-3xl sm:text-4xl">💎</span>
-              <h2 className="text-2xl sm:text-3xl font-bold text-violet-800">
-                写在最后
-              </h2>
-            </div>
-            <p className="text-base sm:text-lg text-zinc-800 leading-relaxed whitespace-pre-line">
-              {conclusionText}
-            </p>
-          </section>
+          </div>
+        </ExportableContainer>
 
-        </div>
-
-        {/* 底部行动区 */}
-        <div className="mt-8 sm:mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <CopyButton shareText={shareText} />
+        {/* 底部行动按钮 */}
+        <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-4 justify-center items-stretch sm:items-center">
           <Link
             href="/test"
-            className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold text-white bg-violet-600 hover:bg-violet-700 active:bg-violet-800 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 sm:hover:scale-105 text-center"
+            className="flex-1 sm:flex-initial px-8 py-4 text-base sm:text-lg font-semibold text-white bg-violet-600 hover:bg-violet-700 active:bg-violet-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] text-center"
           >
             🔄 重新测试
           </Link>
           <Link
             href="/"
-            className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold text-zinc-700 bg-white hover:bg-zinc-50 active:bg-zinc-100 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 sm:hover:scale-105 border-2 border-zinc-200 text-center"
+            className="flex-1 sm:flex-initial px-8 py-4 text-base sm:text-lg font-semibold text-zinc-700 bg-white hover:bg-zinc-50 active:bg-zinc-100 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] border-2 border-zinc-200 text-center"
           >
             🏠 返回首页
           </Link>
         </div>
 
         {/* 底部说明 */}
-        <p className="text-center text-sm text-zinc-500 mt-6 sm:mt-8 px-4">
+        <p className="text-center text-xs sm:text-sm text-zinc-500 mt-6 px-4">
           测试基于心理学原理，结果仅供自我觉察参考
         </p>
 

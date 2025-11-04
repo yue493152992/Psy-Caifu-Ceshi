@@ -45,6 +45,13 @@ export default function Home() {
           >
             开始探索
           </Link>
+
+          {/* 开发辅助入口：结果页示例 */}
+          <div className="mt-4">
+            <Link href="/result" className="text-sm text-violet-700 hover:text-violet-800 underline">
+              查看结果页示例
+            </Link>
+          </div>
           
           {/* 社会证明 */}
           <p className="mt-5 sm:mt-6 text-sm text-zinc-500 px-4">
