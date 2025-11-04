@@ -1,24 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 财富心理测试
 
-## Getting Started
+一个基于 Next.js 开发的财富心理测试 Web 应用，通过简单的选择测试帮助用户了解自己的财富心理特征。
 
-First, run the development server:
+## ✨ 功能特性
+
+- 🎯 **简洁的测试流程**：两步选择完成测试
+- 📊 **详细的结果分析**：包含财富潜力、财富卡点和提升方向三个维度
+- 🎨 **精美的 UI 设计**：现代化、响应式设计，支持移动端
+- 📷 **导出功能**：支持将测试结果导出为图片
+- 🔄 **静态生成**：所有结果页预生成，快速加载
+
+## 🛠️ 技术栈
+
+- **框架**: Next.js 16.0 (App Router)
+- **语言**: TypeScript
+- **样式**: Tailwind CSS 4
+- **部署**: Vercel (推荐)
+
+## 🚀 快速开始
+
+### 安装依赖
+
+```bash
+npm install
+```
+
+### 开发模式
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+访问 [http://localhost:3000](http://localhost:3000) 查看应用。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 构建生产版本
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
+
+## 📁 项目结构
+
+```
+wealth-psychology-test/
+├── app/                    # Next.js App Router
+│   ├── result/            # 结果页
+│   └── test/              # 测试页
+├── lib/                   # 数据和工具函数
+│   ├── test-data.ts       # 测试选项数据
+│   └── result-data.ts     # 结果分析数据
+├── public/                # 静态资源
+└── package.json
+```
+
+## 🎨 设计特点
+
+- **三大主题板块**：
+  - 财富潜力（浅蓝色主题）
+  - 财富卡点（琥珀色主题）
+  - 提升方向（绿色主题）
+- **统一的设计语言**：所有卡片使用统一的边框、阴影和间距
+- **响应式设计**：完美适配桌面端和移动端
+
+## 📝 测试流程
+
+1. 访问测试页面
+2. 第一步：选择代表"自己"的选项
+3. 第二步：选择代表"财富"的选项
+4. 查看个性化测试结果
+
+## 🔐 部署
+
+本项目已配置 Vercel，可以直接部署：
+
+1. 将代码推送到 GitHub
+2. 在 Vercel 中导入仓库
+3. 自动部署完成
+
+## 📄 许可证
+
+MIT License
+
+---
+
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Learn More
 
@@ -26,11 +92,3 @@ To learn more about Next.js, take a look at the following resources:
 
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
